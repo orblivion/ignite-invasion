@@ -4,5 +4,5 @@ package main
 // This one is good for:
 // * making sure the output and input work the same? Hmm. Ordering tho.
 // * fuzz/crash testing
-func generateTestMap() {
-}
+// func generateTestMap() {
+// }

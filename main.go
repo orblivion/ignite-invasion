@@ -1,7 +1,7 @@
 package main
 
 // TODO Naming convention
-SIMULATION_LENGTH = 10000
+const SimulationLength = 10000
 
 // Assumptions:
 
@@ -16,3 +16,6 @@ SIMULATION_LENGTH = 10000
 // If two aliens START in the same city, they all will destroy each other and the city.
 
 // Each alien *needs* to move every turn, unless it's trapped.
+
+func main() {
+}

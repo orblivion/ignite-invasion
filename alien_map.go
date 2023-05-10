@@ -7,7 +7,7 @@ type AlienMap map[*CityRoads]CityAliens
 
 func moveAliens(thisMap AlienMap) (nextMap AlienMap) {
 	// In order to keep track of which aliens have already moved, we are making a new AlienMap each time
-	// TODO - maybe we map alien to city ... but then we need to have both at least temporarily, for simplicity
+	// TODO - maybe we map alien to city ... but then we need
+	// to have both at least temporarily, for simplicity
+	return AlienMap{}
 }
-
-
