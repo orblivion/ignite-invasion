@@ -22,7 +22,7 @@ func TestParseMapSuccess(t *testing.T) {
 	roadMap, err := parseMap(input)
 
 	if err != nil {
-		t.Fatalf("Unexpected error: %s", err.Error())
+		t.Fatalf("Unexpected error: `%s`", err.Error())
 	}
 
 	if l := len(roadMap); l != 5 {
@@ -87,18 +87,83 @@ func TestParseMapSuccess(t *testing.T) {
 }
 
 func TestParseMapInvalid(t *testing.T) {
-	input := strings.Join([]string{
-		"Bar northFoo east=Qux up=Lol west=Austin",
-		"Foo south=Bar",
-	}, "\n")
+	tests := []struct {
+		inputLines  []string
+		expectedErr string
+	}{
+		{
+			inputLines: []string{
+				"Austin",
+				"Foo",
+				"Bar northFoo west=Austin",
+			},
+			expectedErr: "Invalid line in initial map (expecting = in road description): Bar northFoo west=Austin",
+		},
+		{
+			inputLines: []string{
+				"Austin",
+				"Foo",
+				"Bar west=Austin west=Foo",
+			},
+			expectedErr: "Invalid line in initial map (road direction repeated): Bar west=Austin west=Foo",
+		},
+		{
+			inputLines: []string{
+				"Bar west=Foo",
+			},
+			expectedErr: "Invalid line in initial map (road to undefined city): Bar west=Foo",
+		},
+		{
+			inputLines: []string{
+				"Bar%",
+			},
 
-	_, err := parseMap(input)
+			// TODO - comment in implementation, alphanumeric and -_
+			expectedErr: "Invalid line in initial map (invalid city name): Bar%",
+		},
+		{
+			inputLines: []string{
+				"Bar",
+				"Foo",
+				"Bar west=Foo",
+			},
 
-	if err == nil {
-		t.Fatalf("Expected err to be TODO got nil")
+			expectedErr: "Invalid line in initial map (repeated city): Bar west=Foo",
+		},
+		{
+			inputLines: []string{
+				"Bar west=Bar",
+			},
+
+			expectedErr: "Invalid line in initial map (road from city to itself): Bar west=Bar",
+		},
+		{
+			inputLines: []string{
+				"Bar west=Foo east=Foo",
+				"Foo",
+			},
+
+			expectedErr: "Invalid line in initial map (two roads to the same town): Bar west=Foo east=Foo",
+		},
+		{
+			inputLines: []string{
+				"Bar west=Foo",
+				"Foo",
+			},
+
+			expectedErr: "Invalid initial map (not connected in both directions)",
+		},
 	}
 
-	if err.Error() != "TODO" {
-		t.Fatalf("Expected err to be TODO got: %s", err.Error())
+	for _, tt := range tests {
+		input := strings.Join(tt.inputLines, "\n")
+
+		_, err := parseMap(input)
+
+		if err == nil {
+			t.Errorf("Expected err to be `%s` got nil", tt.expectedErr)
+		} else if err.Error() != tt.expectedErr {
+			t.Errorf("Expected err to be `%s` got: `%s`", tt.expectedErr, err.Error())
+		}
 	}
 }
