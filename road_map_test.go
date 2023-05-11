@@ -177,3 +177,37 @@ func TestParseMapInvalid(t *testing.T) {
 		}
 	}
 }
+
+func TestDestroyCity(t *testing.T) {
+	roadMap := make(RoadMap)
+
+	newCity1 := CityRoads{}
+	newCity2 := CityRoads{}
+	newCity3 := CityRoads{}
+
+	roadMap["Foo"] = &newCity1
+	roadMap["Bar"] = &newCity2
+	roadMap["Austin"] = &newCity3
+
+	roadMap["Foo"].North = roadMap["Bar"]
+	roadMap["Bar"].South = roadMap["Foo"]
+	roadMap["Austin"].East = roadMap["Bar"]
+	roadMap["Bar"].East = roadMap["Austin"]
+
+	roadMap.destroyCity("Foo")
+
+	if len(roadMap) != 2 {
+		t.Errorf("Expected Bar and Austin only to remain after destroying Foo")
+	}
+	if _, ok := roadMap["Bar"]; !ok {
+		t.Errorf("Expected Bar and Austin only to remain after destroying Foo")
+	}
+	if _, ok := roadMap["Austin"]; !ok {
+		t.Errorf("Expected Bar and Austin only to remain after destroying Foo")
+	}
+
+	expectedBar := CityRoads{East: roadMap["Austin"]}
+	if *roadMap["Bar"] != expectedBar {
+		t.Errorf("Expected Bar to have one road, east to Austin")
+	}
+}

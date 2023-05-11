@@ -180,7 +180,39 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 func printMap(rm RoadMap) {
 }
 
-func destroyCity() {
-	// ... follow links, set nils, delete entry from Map. That will kill the aliens inside.
-	// Bar has been destroyed by Goomkormonzor and Thublarkorxan!
+func (rm RoadMap) destroyCity(cityName CityName) {
+
+	// This function deletes a connection given city to another city
+	deleteConnections := func(subject *CityRoads, destination *CityRoads) {
+		// If the destination is nil in the first place, it's not a
+		// city, therefore not a half-connected city.
+		if destination == nil {
+			return
+		}
+
+		// Find the road back to the subject and delete the connection
+		// in that direction
+		if destination.North == subject {
+			destination.North = nil
+		}
+		if destination.East == subject {
+			destination.East = nil
+		}
+		if destination.South == subject {
+			destination.South = nil
+		}
+		if destination.West == subject {
+			destination.West = nil
+		}
+	}
+
+	subject := rm[cityName]
+	deleteConnections(subject, subject.North)
+	deleteConnections(subject, subject.East)
+	deleteConnections(subject, subject.South)
+	deleteConnections(subject, subject.West)
+	delete(rm, cityName)
+
+	// TODO kill the aliens inside.
+	// TODO print Bar has been destroyed by Goomkormonzor and Thublarkorxan!
 }
