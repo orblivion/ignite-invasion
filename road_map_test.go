@@ -62,10 +62,10 @@ func TestParseMapSuccess(t *testing.T) {
 
 	for _, tt := range tests {
 		// nil by default, which is what we want if a name wasn't provided
-		var north *CityRoads
-		var east *CityRoads
-		var south *CityRoads
-		var west *CityRoads
+		var north *City
+		var east *City
+		var south *City
+		var west *City
 
 		if tt.north != "" {
 			north = roadMap[tt.north]
@@ -80,10 +80,10 @@ func TestParseMapSuccess(t *testing.T) {
 			west = roadMap[tt.west]
 		}
 
-		if roadMap[tt.subject].North != north ||
-			roadMap[tt.subject].East != east ||
-			roadMap[tt.subject].South != south ||
-			roadMap[tt.subject].West != west {
+		if roadMap[tt.subject].Roads.North != north ||
+			roadMap[tt.subject].Roads.East != east ||
+			roadMap[tt.subject].Roads.South != south ||
+			roadMap[tt.subject].Roads.West != west {
 			t.Errorf("%s doesn't have expected neighbor cities. Got %+v", tt.subject, roadMap[tt.subject])
 		}
 	}
@@ -181,18 +181,18 @@ func TestParseMapInvalid(t *testing.T) {
 func TestDestroyCity(t *testing.T) {
 	roadMap := make(RoadMap)
 
-	newCity1 := CityRoads{}
-	newCity2 := CityRoads{}
-	newCity3 := CityRoads{}
+	newCity1 := City{}
+	newCity2 := City{}
+	newCity3 := City{}
 
 	roadMap["Foo"] = &newCity1
 	roadMap["Bar"] = &newCity2
 	roadMap["Austin"] = &newCity3
 
-	roadMap["Foo"].North = roadMap["Bar"]
-	roadMap["Bar"].South = roadMap["Foo"]
-	roadMap["Austin"].East = roadMap["Bar"]
-	roadMap["Bar"].East = roadMap["Austin"]
+	roadMap["Foo"].Roads.North = roadMap["Bar"]
+	roadMap["Bar"].Roads.South = roadMap["Foo"]
+	roadMap["Austin"].Roads.East = roadMap["Bar"]
+	roadMap["Bar"].Roads.East = roadMap["Austin"]
 
 	roadMap.destroyCity("Foo")
 
@@ -207,7 +207,7 @@ func TestDestroyCity(t *testing.T) {
 	}
 
 	expectedBar := CityRoads{East: roadMap["Austin"]}
-	if *roadMap["Bar"] != expectedBar {
+	if roadMap["Bar"].Roads != expectedBar {
 		t.Errorf("Expected Bar to have one road, east to Austin")
 	}
 }

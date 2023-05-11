@@ -12,14 +12,19 @@ import (
 
 type CityName string
 type CityRoads struct {
-	North *CityRoads
-	East  *CityRoads
-	South *CityRoads
-	West  *CityRoads
+	North  *City
+	East   *City
+	South  *City
+	West   *City
+}
+
+type City struct{
+	Aliens CityAliens
+	Roads CityRoads
 }
 
 // TODO can we get rid of the *, and refer to &roadMap[name] and get the right pointer?
-type RoadMap map[CityName]*CityRoads
+type RoadMap map[CityName]*City
 
 // Are roads automatically two-way? Suppose the map says Foo has north=Bar, but
 // Bar doesn't have south=Foo. Should I assume:
@@ -67,7 +72,7 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 		}
 
 		// Initialize a new city at this name in the roadMap
-		newCity := CityRoads{}
+		newCity := City{Roads: CityRoads{}}
 		roadMap[subjectName] = &newCity
 	}
 
@@ -107,39 +112,39 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 				return
 			}
 
-			if subject.North == destination ||
-				subject.East == destination ||
-				subject.South == destination ||
-				subject.West == destination {
+			if subject.Roads.North == destination ||
+				subject.Roads.East == destination ||
+				subject.Roads.South == destination ||
+				subject.Roads.West == destination {
 				err = fmt.Errorf("Invalid line in initial map (two roads to the same town): " + line)
 				return
 			}
 
 			switch direction {
 			case "north":
-				if subject.North != nil {
+				if subject.Roads.North != nil {
 					err = fmt.Errorf("Invalid line in initial map (road direction repeated): " + line)
 					return
 				}
-				subject.North = destination
+				subject.Roads.North = destination
 			case "east":
-				if subject.East != nil {
+				if subject.Roads.East != nil {
 					err = fmt.Errorf("Invalid line in initial map (road direction repeated): " + line)
 					return
 				}
-				subject.East = destination
+				subject.Roads.East = destination
 			case "south":
-				if subject.South != nil {
+				if subject.Roads.South != nil {
 					err = fmt.Errorf("Invalid line in initial map (road direction repeated): " + line)
 					return
 				}
-				subject.South = destination
+				subject.Roads.South = destination
 			case "west":
-				if subject.West != nil {
+				if subject.Roads.West != nil {
 					err = fmt.Errorf("Invalid line in initial map (road direction repeated): " + line)
 					return
 				}
-				subject.West = destination
+				subject.Roads.West = destination
 			default:
 				err = fmt.Errorf("Invalid line in initial map (invalid direction): " + line)
 				return
@@ -150,7 +155,7 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 	// Loop over the results to make sure no one-way roads
 
 	// This function checks whether a given city is connected to another city
-	isHalfConnectedCity := func(subject *CityRoads, destination *CityRoads) bool {
+	isHalfConnectedCity := func(subject *City, destination *City) bool {
 		// If the destination is nil in the first place, it's not a
 		// city, therefore not a half-connected city.
 		if destination == nil {
@@ -159,17 +164,17 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 
 		// If none of the directions from destination go back to the
 		// subject, destination is half-connected
-		return !(destination.North == subject ||
-			destination.East == subject ||
-			destination.South == subject ||
-			destination.West == subject)
+		return !(destination.Roads.North == subject ||
+			destination.Roads.East == subject ||
+			destination.Roads.South == subject ||
+			destination.Roads.West == subject)
 	}
 	for _, city := range roadMap {
 		// Confirm that every connected city connects back
-		if isHalfConnectedCity(city, city.North) ||
-			isHalfConnectedCity(city, city.East) ||
-			isHalfConnectedCity(city, city.South) ||
-			isHalfConnectedCity(city, city.West) {
+		if isHalfConnectedCity(city, city.Roads.North) ||
+			isHalfConnectedCity(city, city.Roads.East) ||
+			isHalfConnectedCity(city, city.Roads.South) ||
+			isHalfConnectedCity(city, city.Roads.West) {
 			err = fmt.Errorf("Invalid initial map (some roads are not connected on both ends)")
 			return
 		}
@@ -178,12 +183,12 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 }
 
 func printMap(rm RoadMap) {
+	// TODO
 }
 
 func (rm RoadMap) destroyCity(cityName CityName) {
-
 	// This function deletes a connection given city to another city
-	deleteConnections := func(subject *CityRoads, destination *CityRoads) {
+	deleteConnections := func(subject *City, destination *City) {
 		// If the destination is nil in the first place, it's not a
 		// city, therefore not a half-connected city.
 		if destination == nil {
@@ -192,25 +197,25 @@ func (rm RoadMap) destroyCity(cityName CityName) {
 
 		// Find the road back to the subject and delete the connection
 		// in that direction
-		if destination.North == subject {
-			destination.North = nil
+		if destination.Roads.North == subject {
+			destination.Roads.North = nil
 		}
-		if destination.East == subject {
-			destination.East = nil
+		if destination.Roads.East == subject {
+			destination.Roads.East = nil
 		}
-		if destination.South == subject {
-			destination.South = nil
+		if destination.Roads.South == subject {
+			destination.Roads.South = nil
 		}
-		if destination.West == subject {
-			destination.West = nil
+		if destination.Roads.West == subject {
+			destination.Roads.West = nil
 		}
 	}
 
 	subject := rm[cityName]
-	deleteConnections(subject, subject.North)
-	deleteConnections(subject, subject.East)
-	deleteConnections(subject, subject.South)
-	deleteConnections(subject, subject.West)
+	deleteConnections(subject, subject.Roads.North)
+	deleteConnections(subject, subject.Roads.East)
+	deleteConnections(subject, subject.Roads.South)
+	deleteConnections(subject, subject.Roads.West)
 	delete(rm, cityName)
 
 	// TODO kill the aliens inside.
