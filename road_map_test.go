@@ -97,7 +97,7 @@ func TestParseMapInvalid(t *testing.T) {
 				"Foo",
 				"Bar northFoo west=Austin",
 			},
-			expectedErr: "Invalid line in initial map (expecting = in road description): Bar northFoo west=Austin",
+			expectedErr: "Invalid line in initial map (expecting one = in road description): Bar northFoo west=Austin",
 		},
 		{
 			inputLines: []string{
@@ -109,6 +109,14 @@ func TestParseMapInvalid(t *testing.T) {
 		},
 		{
 			inputLines: []string{
+				"Foo",
+				"Bar up=Foo",
+			},
+			expectedErr: "Invalid line in initial map (invalid direction): Bar up=Foo",
+		},
+
+		{
+			inputLines: []string{
 				"Bar west=Foo",
 			},
 			expectedErr: "Invalid line in initial map (road to undefined city): Bar west=Foo",
@@ -118,7 +126,6 @@ func TestParseMapInvalid(t *testing.T) {
 				"Bar#",
 			},
 
-			// TODO - comment in implementation, alphanumeric and -_
 			expectedErr: "Invalid line in initial map (invalid city name): Bar#",
 		},
 		{
