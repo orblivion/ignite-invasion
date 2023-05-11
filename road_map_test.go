@@ -115,11 +115,11 @@ func TestParseMapInvalid(t *testing.T) {
 		},
 		{
 			inputLines: []string{
-				"Bar%",
+				"Bar#",
 			},
 
 			// TODO - comment in implementation, alphanumeric and -_
-			expectedErr: "Invalid line in initial map (invalid city name): Bar%",
+			expectedErr: "Invalid line in initial map (invalid city name): Bar#",
 		},
 		{
 			inputLines: []string{
