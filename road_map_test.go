@@ -18,6 +18,9 @@ func TestParseMapSuccess(t *testing.T) {
 	input := strings.Join([]string{
 		"Bar north=Foo east=Qux south=Lol west=Austin",
 		"Foo south=Bar",
+		"Austin north=Bar",
+		"Lol east=Bar",
+		"Qux south=Bar",
 	}, "\n")
 	roadMap, err := parseMap(input)
 
@@ -47,13 +50,13 @@ func TestParseMapSuccess(t *testing.T) {
 			south:   "Bar",
 		}, {
 			subject: "Qux",
-			west:    "Bar",
+			south:   "Bar",
 		}, {
 			subject: "Lol",
-			north:   "Bar",
+			east:    "Bar",
 		}, {
 			subject: "Austin",
-			east:    "Bar",
+			north:   "Bar",
 		},
 	}
 
@@ -158,7 +161,7 @@ func TestParseMapInvalid(t *testing.T) {
 				"Foo",
 			},
 
-			expectedErr: "Invalid initial map (not connected in both directions)",
+			expectedErr: "Invalid initial map (some roads are not connected on both ends)",
 		},
 	}
 
