@@ -1,6 +1,6 @@
 package main
 
-func generateAlienName() {
+func generateAlienName() AlienName {
 	// Pick 4 different name segments, order matters, that's 3000 alien names.
 	// If we need more, we can append numbers
 
@@ -16,4 +16,7 @@ func generateAlienName() {
 		"blar",
 		"yaf",
 	}
+
+	a := ""
+	return AlienName(&a)
 }
