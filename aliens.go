@@ -8,14 +8,52 @@ type CityAliens []AlienName
 
 type AlienMoveMap map[*CityRoads]CityAliens
 
-/*
-func moveAliens(thisMap AlienMap) (nextMap AlienMap) {
-	// In order to keep track of which aliens have already moved, we are making a new AlienMap each time
-	// TODO - maybe we map alien to city ... but then we need
-	// to have both at least temporarily, for simplicity
-	return AlienMap{}
+func (rm RoadMap) moveAliens() {
+	// We can't just loop through every city and move the aliens around; we
+	// would end up moving some aliens multiple times. Instead, we do one
+	// sweep where we determine where to move to, and a second sweep to
+	// actually move them.
+	alienMoves := make(map[*City]CityAliens)
+
+	for _, city := range rm {
+		// Put neighbor cities in a slice so we can easily pick on at random
+		var neighborCities [](*City)
+		if city.Roads.North != nil {
+			neighborCities = append(neighborCities, city.Roads.North)
+		}
+		if city.Roads.East != nil {
+			neighborCities = append(neighborCities, city.Roads.East)
+		}
+		if city.Roads.South != nil {
+			neighborCities = append(neighborCities, city.Roads.South)
+		}
+		if city.Roads.West != nil {
+			neighborCities = append(neighborCities, city.Roads.West)
+		}
+
+		// If there are no roads out of this city, all aliens in this
+		// city are trapped. Indicate that the list of aliens does not
+		// change.
+		if len(neighborCities) == 0 {
+			alienMoves[city] = city.Aliens
+			continue
+		}
+
+		// If there are roads, pick a neighbor city at random for each
+		// alien and indicate that they will move there.
+		for _, alien := range city.Aliens {
+			nextCity := neighborCities[rand.Intn(len(neighborCities))]
+			alienMoves[nextCity] = append(alienMoves[nextCity], alien)
+		}
+	}
+
+	// Actually move the aliens to their new destinations
+	for _, city := range rm {
+		// If city is not in alienMoves, alienMoves[city].Aliens will
+		// be empty, which is what we want here anyway.
+		city.Aliens = alienMoves[city]
+	}
 }
-*/
 
 func (rm RoadMap) setInitialAliens(numAliens int) {
 	// Since we're picking at random we'll want cities integer-indexed
