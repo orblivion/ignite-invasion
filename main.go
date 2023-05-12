@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strconv"
+)
 
 const SimulationLength = 10000
 
@@ -23,4 +28,24 @@ func runSimulation(numAliens int, numIterations int, mapInput string) error {
 }
 
 func main() {
+	if len(os.Args) != 3 {
+		fmt.Printf("Expected 2 arguments: fileName, numAliens (got %d argument[s])\n", len(os.Args)-1)
+		os.Exit(1)
+	}
+	fileName := os.Args[1]
+	numAliensStr := os.Args[2]
+
+	mapInput, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		fmt.Println("Error reading map file: ", err.Error())
+		os.Exit(1)
+	}
+
+	numAliens, err := strconv.Atoi(numAliensStr)
+	if err != nil {
+		fmt.Println("Error parsing number of aliens: ", err.Error())
+		os.Exit(1)
+	}
+
+	runSimulation(numAliens, SimulationLength, string(mapInput))
 }
