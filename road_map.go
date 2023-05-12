@@ -12,15 +12,15 @@ import (
 
 type CityName string
 type CityRoads struct {
-	North  *City
-	East   *City
-	South  *City
-	West   *City
+	North *City
+	East  *City
+	South *City
+	West  *City
 }
 
-type City struct{
+type City struct {
 	Aliens CityAliens
-	Roads CityRoads
+	Roads  CityRoads
 }
 
 // TODO can we get rid of the *, and refer to &roadMap[name] and get the right pointer?
