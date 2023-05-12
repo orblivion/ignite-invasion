@@ -24,7 +24,6 @@ type City struct {
 	Roads  CityRoads
 }
 
-// TODO can we get rid of the *, and refer to &roadMap[name] and get the right pointer?
 type RoadMap map[CityName]*City
 
 // Are roads automatically two-way? Suppose the map says Foo has north=Bar, but
@@ -258,6 +257,5 @@ func (rm RoadMap) destroyCity(cityName CityName) {
 	deleteConnections(subject, subject.Roads.West)
 	delete(rm, cityName)
 
-	// TODO kill the aliens inside.
 	// TODO print Bar has been destroyed by Goomkormonzor and Thublarkorxan!
 }
