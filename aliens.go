@@ -81,7 +81,6 @@ func (rm RoadMap) setInitialAliens(numAliens int) {
 	}
 }
 
-// TODO Test - alien names are unique, etc
 func generateAlienName(seed int) AlienName {
 	// Pick 4 different name segments. With order mattering, that's 3000+ alien names.
 	// If we need more, we start appending numbers.

@@ -171,4 +171,17 @@ func TestGenerateAlienName(t *testing.T) {
 			t.Errorf("Expected %s got %s", want, *got)
 		}
 	}
+
+	// Test that alien names are unique
+
+	// Using `string` since AlienName is a pointer to string. We want to know
+	// whether the underlying strings are unique
+	uniqueNames := make(map[string]bool)
+	for x := 0; x < 50000; x++ {
+		newName := generateAlienName(x)
+		if _, ok := uniqueNames[*newName]; ok {
+			t.Errorf("Duplicated name %s with seed %d", *newName, x)
+		}
+		uniqueNames[*newName] = true
+	}
 }
