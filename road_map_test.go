@@ -211,3 +211,31 @@ func TestDestroyCity(t *testing.T) {
 		t.Errorf("Expected Bar to have one road, east to Austin")
 	}
 }
+
+func TestOutputMap(t *testing.T) {
+	roadMap := make(RoadMap)
+
+	foo := City{}
+	bar := City{}
+	austin := City{}
+
+	roadMap["Foo"] = &foo
+	roadMap["Bar"] = &bar
+	roadMap["Austin"] = &austin
+
+	roadMap["Foo"].Roads.North = roadMap["Bar"]
+	roadMap["Bar"].Roads.South = roadMap["Foo"]
+	roadMap["Austin"].Roads.East = roadMap["Bar"]
+	roadMap["Bar"].Roads.East = roadMap["Austin"]
+
+	expected := strings.Join([]string{
+		"Austin east=Bar",
+		"Bar east=Austin south=Foo",
+		"Foo north=Bar",
+	}, "\n")
+
+	output := roadMap.outputMap()
+	if output != expected {
+		t.Errorf("Map output not as expected. Got:\n%s", output)
+	}
+}

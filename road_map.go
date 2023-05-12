@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -182,8 +183,47 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 	return
 }
 
-func printMap(rm RoadMap) {
-	// TODO
+func (rm RoadMap) outputMap() (output string) {
+	var orderedCityNames sort.StringSlice
+	for cityName, _ := range rm {
+		// Cast it to string so that we can use the string sorting function
+		orderedCityNames = append(orderedCityNames, string(cityName))
+	}
+	sort.Sort(orderedCityNames)
+
+	// A rare case that we want a city name given a city
+	nameByCity := make(map[*City]string)
+	for cityName, city := range rm {
+		// We'll use it for output so let's just cast it to string now
+		nameByCity[city] = string(cityName)
+	}
+
+	for i, cn := range orderedCityNames {
+		output += cn
+
+		// Cast it back to CityName
+		cityName := CityName(cn)
+		roads := rm[cityName].Roads
+
+		if roads.North != nil {
+			output += " north=" + nameByCity[roads.North]
+		}
+		if roads.East != nil {
+			output += " east=" + nameByCity[roads.East]
+		}
+		if roads.South != nil {
+			output += " south=" + nameByCity[roads.South]
+		}
+		if roads.West != nil {
+			output += " west=" + nameByCity[roads.West]
+		}
+
+		// Newline if it's not the last line
+		if i < len(orderedCityNames)-1 {
+			output += "\n"
+		}
+	}
+	return
 }
 
 func (rm RoadMap) destroyCity(cityName CityName) {
