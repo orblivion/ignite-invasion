@@ -33,6 +33,9 @@ func TestSetInitialAliens(t *testing.T) {
 	if len(dupeCheck) != 70 {
 		t.Errorf("Expected 70 aliens to get created")
 	}
+	if len(roadMap["Foo"].aliens) == 70 || len(roadMap["Bar"].aliens) == 70 || len(roadMap["Austin"].aliens) == 70 {
+		t.Errorf("Expected all 70 aliens not to end up in the same city")
+	}
 }
 
 func TestMoveAliens(t *testing.T) {
