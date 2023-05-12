@@ -34,4 +34,4 @@ Roads can curve, so (for instance) a `north` road coming out of one city need no
 ./ignite-invasion my-map.txt 20
 ```
 
-This will load the map located at my-map.txt, and add 20 aliens in starting positions on the map.
+This will load the map located at my-map.txt, add 20 aliens in starting positions on the map, and run the simulation. Note that this will generate a fair amount of output.
