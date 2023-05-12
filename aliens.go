@@ -60,6 +60,8 @@ func (rm RoadMap) moveAliens() {
 
 func (rm RoadMap) fightAliens() {
 	for cityName, city := range rm {
+		// If 2 or more aliens can land on the same city, they destroy the city (and
+		// each other).
 		if len(city.Aliens) > 1 {
 			rm.destroyCity(cityName)
 		}
