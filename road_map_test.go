@@ -163,6 +163,11 @@ func TestParseMapInvalid(t *testing.T) {
 
 			expectedErr: "Invalid initial map (some roads are not connected on both ends)",
 		},
+		{
+			inputLines: []string{},
+
+			expectedErr: "Invalid initial map (empty)",
+		},
 	}
 
 	for _, tt := range tests {

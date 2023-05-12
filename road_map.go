@@ -52,7 +52,7 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 		segments := strings.Split(line, " ")
 
 		// Allow empty lines
-		if len(segments) < 1 {
+		if len(segments) == 1 && len(segments[0]) == 0 {
 			continue
 		}
 
@@ -176,6 +176,10 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 			err = fmt.Errorf("Invalid initial map (some roads are not connected on both ends)")
 			return
 		}
+	}
+	if len(roadMap) == 0 {
+		err = fmt.Errorf("Invalid initial map (empty)")
+		return
 	}
 	return
 }
