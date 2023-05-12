@@ -118,3 +118,39 @@ func TestMoveAliens(t *testing.T) {
 		t.Errorf("Expected alienFromLonerCity to stay alone in LonerCity: \n%s", getDebugMap())
 	}
 }
+
+// Test that cities get destroyed when two or more aliens inhabit it.
+// Testing that the correct roads get destroyed is part of the destroyCity test
+func TestFightAliens(t *testing.T) {
+
+	roadMap := make(RoadMap)
+
+	// 0 aliens
+	lol := City{Aliens: []AlienName{}}
+
+	// 1 alien
+	foo := City{Aliens: []AlienName{generateAlienName()}}
+
+	// 2 aliens
+	bar := City{Aliens: []AlienName{generateAlienName(), generateAlienName()}}
+
+	// 3 aliens
+	austin := City{Aliens: []AlienName{generateAlienName(), generateAlienName(), generateAlienName()}}
+
+	roadMap["Lol"] = &lol
+	roadMap["Foo"] = &foo
+	roadMap["Bar"] = &bar
+	roadMap["Austin"] = &austin
+
+	roadMap.fightAliens()
+
+	if len(roadMap) != 2 {
+		t.Errorf("Expected two cities to remain")
+	}
+	if _, ok := roadMap["Lol"]; !ok {
+		t.Errorf("Expected Lol to remain")
+	}
+	if _, ok := roadMap["Foo"]; !ok {
+		t.Errorf("Expected Foo to remain")
+	}
+}

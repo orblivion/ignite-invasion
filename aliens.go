@@ -55,6 +55,14 @@ func (rm RoadMap) moveAliens() {
 	}
 }
 
+func (rm RoadMap) fightAliens() {
+	for cityName, city := range rm {
+		if len(city.Aliens) > 1 {
+			rm.destroyCity(cityName)
+		}
+	}
+}
+
 func (rm RoadMap) setInitialAliens(numAliens int) {
 	// Since we're picking at random we'll want cities integer-indexed
 	var cities [](*City)
