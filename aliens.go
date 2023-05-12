@@ -1,6 +1,9 @@
 package main
 
-import "math/rand"
+import (
+	"fmt"
+	"math/rand"
+)
 
 // Choosing to attach the aliens to the city instead of attaching the city to the aliens because it's simpler to find alien collisions
 type AlienName *string
@@ -72,17 +75,16 @@ func (rm RoadMap) setInitialAliens(numAliens int) {
 
 	for x := 0; x < numAliens; x++ {
 		index := rand.Intn(len(rm))
-		cities[index].Aliens = append(cities[index].Aliens, generateAlienName())
+		cities[index].Aliens = append(cities[index].Aliens, generateAlienName(x))
 	}
 }
 
 // TODO Test - alien names are unique, etc
-func generateAlienName() AlienName {
-	// Pick 4 different name segments, order matters, that's 3000 alien names.
-	// If we need more, we can append numbers
+func generateAlienName(seed int) AlienName {
+	// Pick 4 different name segments. With order mattering, that's 3000+ alien names.
+	// If we need more, we start appending numbers.
 
-	// Capitalize the first letter
-	_ = []string{
+	segments := []string{
 		"goom",
 		"kor",
 		"mon",
@@ -94,6 +96,23 @@ func generateAlienName() AlienName {
 		"yaf",
 	}
 
-	a := ""
-	return AlienName(&a)
+	name := ""
+	for x := 0; x < 4; x++ {
+		index := seed % len(segments)
+		seed /= len(segments)
+		name += segments[index]
+		segments = append(segments[0:index], segments[index+1:]...)
+	}
+
+	// If we really need so many names, start appending numbers
+	// Start with 2 (un-numbered would be 1)
+	if seed > 0 {
+		name += fmt.Sprintf(" %d", seed+1)
+	}
+
+	// Capitalize the first letter
+	firstLetter := name[0] + 'A' - 'a'
+	name = string(firstLetter) + name[1:]
+
+	return AlienName(&name)
 }

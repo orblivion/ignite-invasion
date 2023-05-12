@@ -129,13 +129,13 @@ func TestFightAliens(t *testing.T) {
 	lol := City{Aliens: []AlienName{}}
 
 	// 1 alien
-	foo := City{Aliens: []AlienName{generateAlienName()}}
+	foo := City{Aliens: []AlienName{generateAlienName(0)}}
 
 	// 2 aliens
-	bar := City{Aliens: []AlienName{generateAlienName(), generateAlienName()}}
+	bar := City{Aliens: []AlienName{generateAlienName(1), generateAlienName(2)}}
 
 	// 3 aliens
-	austin := City{Aliens: []AlienName{generateAlienName(), generateAlienName(), generateAlienName()}}
+	austin := City{Aliens: []AlienName{generateAlienName(3), generateAlienName(4), generateAlienName(5)}}
 
 	roadMap["Lol"] = &lol
 	roadMap["Foo"] = &foo
@@ -152,5 +152,23 @@ func TestFightAliens(t *testing.T) {
 	}
 	if _, ok := roadMap["Foo"]; !ok {
 		t.Errorf("Expected Foo to remain")
+	}
+}
+
+func TestGenerateAlienName(t *testing.T) {
+	tests := map[string]AlienName{
+		"Goomkormonzor": generateAlienName(0),
+		"Korgoommonzor": generateAlienName(1),
+
+		// Exhaust all combinations, start over with numbers
+		"Goomkormonzor 2": generateAlienName(9 * 8 * 7 * 6),
+		"Korgoommonzor 2": generateAlienName(9*8*7*6 + 1),
+		"Goomkormonzor 3": generateAlienName(9 * 8 * 7 * 6 * 2),
+		"Korgoommonzor 3": generateAlienName(9*8*7*6*2 + 1),
+	}
+	for want, got := range tests {
+		if want != *got {
+			t.Errorf("Expected %s got %s", want, *got)
+		}
 	}
 }
