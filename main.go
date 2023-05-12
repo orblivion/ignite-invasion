@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"strconv"
+	"time"
 )
 
 const SimulationLength = 10000
@@ -28,6 +30,7 @@ func runSimulation(numAliens int, numIterations int, mapInput string) error {
 }
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
 	if len(os.Args) != 3 {
 		fmt.Printf("Expected 2 arguments: fileName, numAliens (got %d argument[s])\n", len(os.Args)-1)
 		os.Exit(1)
