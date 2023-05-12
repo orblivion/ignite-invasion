@@ -181,13 +181,13 @@ func TestParseMapInvalid(t *testing.T) {
 func TestDestroyCity(t *testing.T) {
 	roadMap := make(RoadMap)
 
-	newCity1 := City{}
-	newCity2 := City{}
-	newCity3 := City{}
+	foo := City{}
+	bar := City{}
+	austin := City{}
 
-	roadMap["Foo"] = &newCity1
-	roadMap["Bar"] = &newCity2
-	roadMap["Austin"] = &newCity3
+	roadMap["Foo"] = &foo
+	roadMap["Bar"] = &bar
+	roadMap["Austin"] = &austin
 
 	roadMap["Foo"].Roads.North = roadMap["Bar"]
 	roadMap["Bar"].Roads.South = roadMap["Foo"]
