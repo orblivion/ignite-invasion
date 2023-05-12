@@ -76,6 +76,7 @@ func (rm RoadMap) setInitialAliens(numAliens int) {
 
 	for x := 0; x < numAliens; x++ {
 		index := rand.Intn(len(rm))
+		// pass a unique x in for each alien so it generates a unique name
 		cities[index].aliens = append(cities[index].aliens, generateAlienName(x))
 	}
 }
@@ -91,13 +92,13 @@ func (ca CityAliens) englishList() string {
 		return *ca[0]
 	}
 
-	// To []string we can use Join on them
+	// To []string so that we can use Join on them
 	var alienNameStrings []string
 	for _, alienName := range ca {
 		alienNameStrings = append(alienNameStrings, *alienName)
 	}
 
-	// Comma separate all but the last
+	// Comma separate all but the last alien
 	alienList := strings.Join(alienNameStrings[:len(alienNameStrings)-1], ", ")
 
 	// ...and [last alien]
@@ -131,7 +132,7 @@ func generateAlienName(seed int) AlienName {
 	}
 
 	// If we really need so many names, start appending numbers
-	// Start with 2 (un-numbered would be 1)
+	// Start with 2 (un-numbered would imply 1)
 	if seed > 0 {
 		name += fmt.Sprintf(" %d", seed+1)
 	}

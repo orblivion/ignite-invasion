@@ -45,8 +45,8 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 
 	// Loop over input once to just look at the cities being defined, to create
 	// the empty city stucts. Having this as a separate step makes it easier to
-	// check later for duplicate cities or later check for references to
-	// nonexistent cities.
+	// check for duplicate cities or later check for references to nonexistent
+	// cities.
 	for _, line := range strings.Split(input, "\n") {
 		line = strings.TrimSpace(line)
 		segments := strings.Split(line, " ")
@@ -185,6 +185,7 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 }
 
 func (rm RoadMap) outputMap() (output string) {
+	// Sort the city names so we get predictable output
 	var orderedCityNames sort.StringSlice
 	for cityName, _ := range rm {
 		// Cast it to string so that we can use the string sorting function
@@ -232,10 +233,10 @@ func (rm RoadMap) destroyCity(cityName CityName) {
 
 	message := fmt.Sprintf("%s has been destroyed by %s!", cityName, city.aliens.englishList())
 
-	// This function deletes a connection given city to another city
+	// This function deletes a connection from the given city to another city
 	deleteConnections := func(subject *City, destination *City) {
 		// If the destination is nil in the first place, it's not a
-		// city, therefore not a half-connected city.
+		// city, therefore nothing to destroy.
 		if destination == nil {
 			return
 		}
@@ -256,6 +257,7 @@ func (rm RoadMap) destroyCity(cityName CityName) {
 		}
 	}
 
+	// Delete all roads back the city, then delete the city itself.
 	deleteConnections(city, city.roads.north)
 	deleteConnections(city, city.roads.east)
 	deleteConnections(city, city.roads.south)

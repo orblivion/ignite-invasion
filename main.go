@@ -16,8 +16,8 @@ func runSimulation(numAliens int, numIterations int, mapInput string) error {
 	if err != nil {
 		return err
 	}
-	roadMap.setInitialAliens(numAliens)
 
+	roadMap.setInitialAliens(numAliens)
 	for i := 0; i < numIterations; i++ {
 		// Fight first. This means that if two aliens START in the same
 		// city, they all will destroy each other and the city.

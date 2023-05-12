@@ -5,16 +5,7 @@ import (
 	"testing"
 )
 
-// Except, I need to have specific tests for specific situations. but we'll see.
-// This one is good for:
-// * making sure the output and input work the same? Hmm. Ordering tho.
-// * fuzz/crash testing
-// func generateTestMap() {
-// }
-
 func TestParseMapSuccess(t *testing.T) {
-	// Incomplete on purpose. south=Bar is explicitly reciprocal, the rest should
-	// be inferred.
 	input := strings.Join([]string{
 		"Bar north=Foo east=Qux south=Lol west=Austin",
 		"Foo south=Bar",

@@ -163,11 +163,11 @@ func TestGenerateAlienName(t *testing.T) {
 		"Goomkormonzor": generateAlienName(0),
 		"Korgoommonzor": generateAlienName(1),
 
-		// Exhaust all combinations, start over with numbers
+		// Exhaust all letter combinations, start over with numbers
 		"Goomkormonzor 2": generateAlienName(9 * 8 * 7 * 6),
-		"Korgoommonzor 2": generateAlienName(9*8*7*6 + 1),
+		"Korgoommonzor 2": generateAlienName((9 * 8 * 7 * 6) + 1),
 		"Goomkormonzor 3": generateAlienName(9 * 8 * 7 * 6 * 2),
-		"Korgoommonzor 3": generateAlienName(9*8*7*6*2 + 1),
+		"Korgoommonzor 3": generateAlienName((9 * 8 * 7 * 6 * 2) + 1),
 	}
 	for want, got := range tests {
 		if want != *got {
@@ -189,7 +189,7 @@ func TestGenerateAlienName(t *testing.T) {
 	}
 }
 
-func TestAliensString(t *testing.T) {
+func TestAliensEnglishList(t *testing.T) {
 	a := "a"
 	b := "b"
 	c := "c"
