@@ -10,8 +10,6 @@ import (
 type AlienName *string
 type CityAliens []AlienName
 
-type AlienMoveMap map[*CityRoads]CityAliens
-
 func (rm RoadMap) moveAliens() {
 	// We can't just loop through every city and move the aliens around; we
 	// would end up moving some aliens multiple times. Instead, we do one
