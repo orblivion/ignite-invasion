@@ -80,10 +80,10 @@ func TestParseMapSuccess(t *testing.T) {
 			west = roadMap[tt.west]
 		}
 
-		if roadMap[tt.subject].Roads.North != north ||
-			roadMap[tt.subject].Roads.East != east ||
-			roadMap[tt.subject].Roads.South != south ||
-			roadMap[tt.subject].Roads.West != west {
+		if roadMap[tt.subject].roads.north != north ||
+			roadMap[tt.subject].roads.east != east ||
+			roadMap[tt.subject].roads.south != south ||
+			roadMap[tt.subject].roads.west != west {
 			t.Errorf("%s doesn't have expected neighbor cities. Got %+v", tt.subject, roadMap[tt.subject])
 		}
 	}
@@ -189,10 +189,10 @@ func TestDestroyCity(t *testing.T) {
 	roadMap["Bar"] = &bar
 	roadMap["Austin"] = &austin
 
-	roadMap["Foo"].Roads.North = roadMap["Bar"]
-	roadMap["Bar"].Roads.South = roadMap["Foo"]
-	roadMap["Austin"].Roads.East = roadMap["Bar"]
-	roadMap["Bar"].Roads.East = roadMap["Austin"]
+	roadMap["Foo"].roads.north = roadMap["Bar"]
+	roadMap["Bar"].roads.south = roadMap["Foo"]
+	roadMap["Austin"].roads.east = roadMap["Bar"]
+	roadMap["Bar"].roads.east = roadMap["Austin"]
 
 	roadMap.destroyCity("Foo")
 
@@ -206,8 +206,8 @@ func TestDestroyCity(t *testing.T) {
 		t.Errorf("Expected Bar and Austin only to remain after destroying Foo")
 	}
 
-	expectedBar := CityRoads{East: roadMap["Austin"]}
-	if roadMap["Bar"].Roads != expectedBar {
+	expectedBar := CityRoads{east: roadMap["Austin"]}
+	if roadMap["Bar"].roads != expectedBar {
 		t.Errorf("Expected Bar to have one road, east to Austin")
 	}
 }
@@ -223,10 +223,10 @@ func TestOutputMap(t *testing.T) {
 	roadMap["Bar"] = &bar
 	roadMap["Austin"] = &austin
 
-	roadMap["Foo"].Roads.North = roadMap["Bar"]
-	roadMap["Bar"].Roads.South = roadMap["Foo"]
-	roadMap["Austin"].Roads.East = roadMap["Bar"]
-	roadMap["Bar"].Roads.East = roadMap["Austin"]
+	roadMap["Foo"].roads.north = roadMap["Bar"]
+	roadMap["Bar"].roads.south = roadMap["Foo"]
+	roadMap["Austin"].roads.east = roadMap["Bar"]
+	roadMap["Bar"].roads.east = roadMap["Austin"]
 
 	expected := strings.Join([]string{
 		"Austin east=Bar",

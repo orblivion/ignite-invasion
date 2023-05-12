@@ -7,21 +7,19 @@ import (
 	"strings"
 )
 
-// TODO - lowercase everything, we're not leaving the main module
-
 // We can use *CityRoads as an identifier for the city. We can compare pointers sometimes.
 
 type CityName string
 type CityRoads struct {
-	North *City
-	East  *City
-	South *City
-	West  *City
+	north *City
+	east  *City
+	south *City
+	west  *City
 }
 
 type City struct {
-	Aliens CityAliens
-	Roads  CityRoads
+	aliens CityAliens
+	roads  CityRoads
 }
 
 type RoadMap map[CityName]*City
@@ -72,7 +70,7 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 		}
 
 		// Initialize a new city at this name in the roadMap
-		newCity := City{Roads: CityRoads{}}
+		newCity := City{roads: CityRoads{}}
 		roadMap[subjectName] = &newCity
 	}
 
@@ -112,39 +110,39 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 				return
 			}
 
-			if subject.Roads.North == destination ||
-				subject.Roads.East == destination ||
-				subject.Roads.South == destination ||
-				subject.Roads.West == destination {
+			if subject.roads.north == destination ||
+				subject.roads.east == destination ||
+				subject.roads.south == destination ||
+				subject.roads.west == destination {
 				err = fmt.Errorf("Invalid line in initial map (two roads to the same town): " + line)
 				return
 			}
 
 			switch direction {
 			case "north":
-				if subject.Roads.North != nil {
+				if subject.roads.north != nil {
 					err = fmt.Errorf("Invalid line in initial map (road direction repeated): " + line)
 					return
 				}
-				subject.Roads.North = destination
+				subject.roads.north = destination
 			case "east":
-				if subject.Roads.East != nil {
+				if subject.roads.east != nil {
 					err = fmt.Errorf("Invalid line in initial map (road direction repeated): " + line)
 					return
 				}
-				subject.Roads.East = destination
+				subject.roads.east = destination
 			case "south":
-				if subject.Roads.South != nil {
+				if subject.roads.south != nil {
 					err = fmt.Errorf("Invalid line in initial map (road direction repeated): " + line)
 					return
 				}
-				subject.Roads.South = destination
+				subject.roads.south = destination
 			case "west":
-				if subject.Roads.West != nil {
+				if subject.roads.west != nil {
 					err = fmt.Errorf("Invalid line in initial map (road direction repeated): " + line)
 					return
 				}
-				subject.Roads.West = destination
+				subject.roads.west = destination
 			default:
 				err = fmt.Errorf("Invalid line in initial map (invalid direction): " + line)
 				return
@@ -164,17 +162,17 @@ func parseMap(input string) (roadMap RoadMap, err error) {
 
 		// If none of the directions from destination go back to the
 		// subject, destination is half-connected
-		return !(destination.Roads.North == subject ||
-			destination.Roads.East == subject ||
-			destination.Roads.South == subject ||
-			destination.Roads.West == subject)
+		return !(destination.roads.north == subject ||
+			destination.roads.east == subject ||
+			destination.roads.south == subject ||
+			destination.roads.west == subject)
 	}
 	for _, city := range roadMap {
 		// Confirm that every connected city connects back
-		if isHalfConnectedCity(city, city.Roads.North) ||
-			isHalfConnectedCity(city, city.Roads.East) ||
-			isHalfConnectedCity(city, city.Roads.South) ||
-			isHalfConnectedCity(city, city.Roads.West) {
+		if isHalfConnectedCity(city, city.roads.north) ||
+			isHalfConnectedCity(city, city.roads.east) ||
+			isHalfConnectedCity(city, city.roads.south) ||
+			isHalfConnectedCity(city, city.roads.west) {
 			err = fmt.Errorf("Invalid initial map (some roads are not connected on both ends)")
 			return
 		}
@@ -202,19 +200,19 @@ func (rm RoadMap) outputMap() (output string) {
 
 		// Cast it back to CityName
 		cityName := CityName(cn)
-		roads := rm[cityName].Roads
+		roads := rm[cityName].roads
 
-		if roads.North != nil {
-			output += " north=" + nameByCity[roads.North]
+		if roads.north != nil {
+			output += " north=" + nameByCity[roads.north]
 		}
-		if roads.East != nil {
-			output += " east=" + nameByCity[roads.East]
+		if roads.east != nil {
+			output += " east=" + nameByCity[roads.east]
 		}
-		if roads.South != nil {
-			output += " south=" + nameByCity[roads.South]
+		if roads.south != nil {
+			output += " south=" + nameByCity[roads.south]
 		}
-		if roads.West != nil {
-			output += " west=" + nameByCity[roads.West]
+		if roads.west != nil {
+			output += " west=" + nameByCity[roads.west]
 		}
 
 		// Newline if it's not the last line
@@ -236,25 +234,25 @@ func (rm RoadMap) destroyCity(cityName CityName) {
 
 		// Find the road back to the subject and delete the connection
 		// in that direction
-		if destination.Roads.North == subject {
-			destination.Roads.North = nil
+		if destination.roads.north == subject {
+			destination.roads.north = nil
 		}
-		if destination.Roads.East == subject {
-			destination.Roads.East = nil
+		if destination.roads.east == subject {
+			destination.roads.east = nil
 		}
-		if destination.Roads.South == subject {
-			destination.Roads.South = nil
+		if destination.roads.south == subject {
+			destination.roads.south = nil
 		}
-		if destination.Roads.West == subject {
-			destination.Roads.West = nil
+		if destination.roads.west == subject {
+			destination.roads.west = nil
 		}
 	}
 
 	subject := rm[cityName]
-	deleteConnections(subject, subject.Roads.North)
-	deleteConnections(subject, subject.Roads.East)
-	deleteConnections(subject, subject.Roads.South)
-	deleteConnections(subject, subject.Roads.West)
+	deleteConnections(subject, subject.roads.north)
+	deleteConnections(subject, subject.roads.east)
+	deleteConnections(subject, subject.roads.south)
+	deleteConnections(subject, subject.roads.west)
 	delete(rm, cityName)
 
 	// TODO print Bar has been destroyed by Goomkormonzor and Thublarkorxan!

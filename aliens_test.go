@@ -20,8 +20,8 @@ func TestSetInitialAliens(t *testing.T) {
 
 	dupeCheck := make(map[AlienName]bool)
 
-	allAliens := append(roadMap["Foo"].Aliens, roadMap["Bar"].Aliens...)
-	allAliens = append(allAliens, roadMap["Austin"].Aliens...)
+	allAliens := append(roadMap["Foo"].aliens, roadMap["Bar"].aliens...)
+	allAliens = append(allAliens, roadMap["Austin"].aliens...)
 
 	for _, alien := range allAliens {
 		if _, ok := dupeCheck[alien]; ok {
@@ -50,20 +50,20 @@ func TestMoveAliens(t *testing.T) {
 	alienFromFoo := AlienName(&alienFromFooStr)
 	alienFromLonerCity := AlienName(&alienFromLonerCityStr)
 
-	foo := City{Aliens: []AlienName{alienFromFoo}}
-	bar := City{Aliens: []AlienName{alienFromBar}}
-	austin := City{Aliens: []AlienName{alienFromAustin}}
-	lonerCity := City{Aliens: []AlienName{alienFromLonerCity}}
+	foo := City{aliens: []AlienName{alienFromFoo}}
+	bar := City{aliens: []AlienName{alienFromBar}}
+	austin := City{aliens: []AlienName{alienFromAustin}}
+	lonerCity := City{aliens: []AlienName{alienFromLonerCity}}
 
 	roadMap["Foo"] = &foo
 	roadMap["Bar"] = &bar
 	roadMap["Austin"] = &austin
 	roadMap["LonerCity"] = &lonerCity // no roads in or out
 
-	roadMap["Foo"].Roads.North = roadMap["Bar"]
-	roadMap["Bar"].Roads.South = roadMap["Foo"]
-	roadMap["Austin"].Roads.East = roadMap["Bar"]
-	roadMap["Bar"].Roads.East = roadMap["Austin"]
+	roadMap["Foo"].roads.north = roadMap["Bar"]
+	roadMap["Bar"].roads.south = roadMap["Foo"]
+	roadMap["Austin"].roads.east = roadMap["Bar"]
+	roadMap["Bar"].roads.east = roadMap["Austin"]
 
 	// The map looks like this:
 	//
@@ -81,7 +81,7 @@ func TestMoveAliens(t *testing.T) {
 		output := ""
 		for name, city := range roadMap {
 			output += fmt.Sprintf("%s:\n", name)
-			for _, alien := range city.Aliens {
+			for _, alien := range city.aliens {
 				output += fmt.Sprintf(" %s\n", *alien)
 			}
 		}
@@ -91,15 +91,15 @@ func TestMoveAliens(t *testing.T) {
 	roadMap.moveAliens()
 
 	// Check that alienFromAustin and alienFromFoo both ended up in Bar
-	if numAliens := len(roadMap["Bar"].Aliens); numAliens != 2 {
+	if numAliens := len(roadMap["Bar"].aliens); numAliens != 2 {
 		t.Errorf("Expected 2 aliens to end up in Bar: \n%s", getDebugMap())
 	} else {
 		// To avoid a panic (harder to read test results), only bother
 		// with these if we have the right number of aliens in Bar
-		if roadMap["Bar"].Aliens[0] != alienFromAustin && roadMap["Bar"].Aliens[1] != alienFromAustin {
+		if roadMap["Bar"].aliens[0] != alienFromAustin && roadMap["Bar"].aliens[1] != alienFromAustin {
 			t.Errorf("Expected alienFromAustin to end up in Bar: \n%s", getDebugMap())
 		}
-		if roadMap["Bar"].Aliens[0] != alienFromFoo && roadMap["Bar"].Aliens[1] != alienFromFoo {
+		if roadMap["Bar"].aliens[0] != alienFromFoo && roadMap["Bar"].aliens[1] != alienFromFoo {
 			t.Errorf("Expected alienFromFoo to end up in Bar: \n%s", getDebugMap())
 		}
 	}
@@ -107,14 +107,14 @@ func TestMoveAliens(t *testing.T) {
 	// Check that alienFromBar ended up in Austin or Foo
 	//
 	// Combine the city aliens to test for both at the same time conveniently
-	austinAndFooAliens := append(roadMap["Foo"].Aliens, roadMap["Austin"].Aliens...)
+	austinAndFooAliens := append(roadMap["Foo"].aliens, roadMap["Austin"].aliens...)
 
 	if len(austinAndFooAliens) != 1 || austinAndFooAliens[0] != alienFromBar {
 		t.Errorf("Expected alienFromBar to end up in (only) Austin or Foo: \n%s", getDebugMap())
 	}
 
 	// Check that alienFromLonerCity stayed put
-	if len(roadMap["LonerCity"].Aliens) != 1 || roadMap["LonerCity"].Aliens[0] != alienFromLonerCity {
+	if len(roadMap["LonerCity"].aliens) != 1 || roadMap["LonerCity"].aliens[0] != alienFromLonerCity {
 		t.Errorf("Expected alienFromLonerCity to stay alone in LonerCity: \n%s", getDebugMap())
 	}
 }
@@ -126,16 +126,16 @@ func TestFightAliens(t *testing.T) {
 	roadMap := make(RoadMap)
 
 	// 0 aliens
-	lol := City{Aliens: []AlienName{}}
+	lol := City{aliens: []AlienName{}}
 
 	// 1 alien
-	foo := City{Aliens: []AlienName{generateAlienName(0)}}
+	foo := City{aliens: []AlienName{generateAlienName(0)}}
 
 	// 2 aliens
-	bar := City{Aliens: []AlienName{generateAlienName(1), generateAlienName(2)}}
+	bar := City{aliens: []AlienName{generateAlienName(1), generateAlienName(2)}}
 
 	// 3 aliens
-	austin := City{Aliens: []AlienName{generateAlienName(3), generateAlienName(4), generateAlienName(5)}}
+	austin := City{aliens: []AlienName{generateAlienName(3), generateAlienName(4), generateAlienName(5)}}
 
 	roadMap["Lol"] = &lol
 	roadMap["Foo"] = &foo

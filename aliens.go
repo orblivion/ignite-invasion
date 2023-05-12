@@ -21,30 +21,30 @@ func (rm RoadMap) moveAliens() {
 	for _, city := range rm {
 		// Put neighbor cities in a slice so we can easily pick on at random
 		var neighborCities [](*City)
-		if city.Roads.North != nil {
-			neighborCities = append(neighborCities, city.Roads.North)
+		if city.roads.north != nil {
+			neighborCities = append(neighborCities, city.roads.north)
 		}
-		if city.Roads.East != nil {
-			neighborCities = append(neighborCities, city.Roads.East)
+		if city.roads.east != nil {
+			neighborCities = append(neighborCities, city.roads.east)
 		}
-		if city.Roads.South != nil {
-			neighborCities = append(neighborCities, city.Roads.South)
+		if city.roads.south != nil {
+			neighborCities = append(neighborCities, city.roads.south)
 		}
-		if city.Roads.West != nil {
-			neighborCities = append(neighborCities, city.Roads.West)
+		if city.roads.west != nil {
+			neighborCities = append(neighborCities, city.roads.west)
 		}
 
 		// If there are no roads out of this city, all aliens in this
 		// city are trapped. Indicate that the list of aliens does not
 		// change.
 		if len(neighborCities) == 0 {
-			alienMoves[city] = city.Aliens
+			alienMoves[city] = city.aliens
 			continue
 		}
 
 		// If there are roads, pick a neighbor city at random for each
 		// alien and indicate that they will move there.
-		for _, alien := range city.Aliens {
+		for _, alien := range city.aliens {
 			nextCity := neighborCities[rand.Intn(len(neighborCities))]
 			alienMoves[nextCity] = append(alienMoves[nextCity], alien)
 		}
@@ -52,9 +52,9 @@ func (rm RoadMap) moveAliens() {
 
 	// Actually move the aliens to their new destinations
 	for _, city := range rm {
-		// If city is not in alienMoves, alienMoves[city].Aliens will
+		// If city is not in alienMoves, alienMoves[city].aliens will
 		// be empty, which is what we want here anyway.
-		city.Aliens = alienMoves[city]
+		city.aliens = alienMoves[city]
 	}
 }
 
@@ -62,7 +62,7 @@ func (rm RoadMap) fightAliens() {
 	for cityName, city := range rm {
 		// If 2 or more aliens can land on the same city, they destroy the city (and
 		// each other).
-		if len(city.Aliens) > 1 {
+		if len(city.aliens) > 1 {
 			rm.destroyCity(cityName)
 		}
 	}
@@ -77,7 +77,7 @@ func (rm RoadMap) setInitialAliens(numAliens int) {
 
 	for x := 0; x < numAliens; x++ {
 		index := rand.Intn(len(rm))
-		cities[index].Aliens = append(cities[index].Aliens, generateAlienName(x))
+		cities[index].aliens = append(cities[index].aliens, generateAlienName(x))
 	}
 }
 
