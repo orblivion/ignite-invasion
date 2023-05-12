@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 )
 
 // Choosing to attach the aliens to the city instead of attaching the city to the aliens because it's simpler to find alien collisions
@@ -79,6 +80,32 @@ func (rm RoadMap) setInitialAliens(numAliens int) {
 		index := rand.Intn(len(rm))
 		cities[index].aliens = append(cities[index].aliens, generateAlienName(x))
 	}
+}
+
+// list of all aliens in this city formatted in English
+// ex: "a, b and c"
+func (ca CityAliens) englishList() string {
+	// Special cases that don't fit the below formula
+	if len(ca) == 0 {
+		return ""
+	}
+	if len(ca) == 1 {
+		return *ca[0]
+	}
+
+	// To []string we can use Join on them
+	var alienNameStrings []string
+	for _, alienName := range ca {
+		alienNameStrings = append(alienNameStrings, *alienName)
+	}
+
+	// Comma separate all but the last
+	alienList := strings.Join(alienNameStrings[:len(alienNameStrings)-1], ", ")
+
+	// ...and [last alien]
+	alienList += " and " + alienNameStrings[len(alienNameStrings)-1]
+
+	return alienList
 }
 
 func generateAlienName(seed int) AlienName {

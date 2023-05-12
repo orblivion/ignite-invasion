@@ -224,6 +224,10 @@ func (rm RoadMap) outputMap() (output string) {
 }
 
 func (rm RoadMap) destroyCity(cityName CityName) {
+	city := rm[cityName]
+
+	message := fmt.Sprintf("%s has been destroyed by %s!", cityName, city.aliens.englishList())
+
 	// This function deletes a connection given city to another city
 	deleteConnections := func(subject *City, destination *City) {
 		// If the destination is nil in the first place, it's not a
@@ -248,12 +252,11 @@ func (rm RoadMap) destroyCity(cityName CityName) {
 		}
 	}
 
-	subject := rm[cityName]
-	deleteConnections(subject, subject.roads.north)
-	deleteConnections(subject, subject.roads.east)
-	deleteConnections(subject, subject.roads.south)
-	deleteConnections(subject, subject.roads.west)
+	deleteConnections(city, city.roads.north)
+	deleteConnections(city, city.roads.east)
+	deleteConnections(city, city.roads.south)
+	deleteConnections(city, city.roads.west)
 	delete(rm, cityName)
 
-	// TODO print Bar has been destroyed by Goomkormonzor and Thublarkorxan!
+	fmt.Println(message)
 }

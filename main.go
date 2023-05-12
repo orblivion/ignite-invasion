@@ -2,7 +2,6 @@ package main
 
 const SimulationLength = 10000
 
-
 func runSimuation() {
 	for {
 		// Fight first. This means that if two aliens START in the same

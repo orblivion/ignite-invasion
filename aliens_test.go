@@ -185,3 +185,25 @@ func TestGenerateAlienName(t *testing.T) {
 		uniqueNames[*newName] = true
 	}
 }
+
+func TestAliensString(t *testing.T) {
+	a := "a"
+	b := "b"
+	c := "c"
+	d := "d"
+
+	tests := map[string]CityAliens{
+		"":              CityAliens{},
+		"a":             CityAliens{&a},
+		"a and b":       CityAliens{&a, &b},
+		"a, b and c":    CityAliens{&a, &b, &c},
+		"a, b, c and d": CityAliens{&a, &b, &c, &d},
+	}
+
+	for want, aliens := range tests {
+		got := aliens.englishList()
+		if want != got {
+			t.Errorf("Expected %s got %s", want, got)
+		}
+	}
+}
